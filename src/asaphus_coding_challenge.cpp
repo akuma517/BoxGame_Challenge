@@ -45,7 +45,7 @@
 #include <vector>
 
 #define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+#include "includes/catch.hpp"
 
 class Box {
  public:
@@ -82,9 +82,8 @@ std::pair<double, double> play(const std::vector<uint32_t>& input_weights) {
   boxes.emplace_back(Box::makeBlueBox(0.3));
 
   // TODO
-
-  std::cout << "Scores: player A " << player_A.getScore() << ", player B "
-            << player_B.getScore() << std::endl;
+  Player player_A, player_B;
+  std::cout << "Scores: player A " << player_A.getScore() << ", player B " << player_B.getScore() << std::endl;
   return std::make_pair(player_A.getScore(), player_B.getScore());
 }
 
