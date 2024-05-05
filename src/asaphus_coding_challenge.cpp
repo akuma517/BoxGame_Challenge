@@ -43,11 +43,13 @@
 #include <memory>
 #include <numeric>
 #include <vector>
+#include<iostream>
 
 #define CATCH_CONFIG_MAIN
 #include "includes/catch.hpp"
 
 class Box {
+
  public:
   explicit Box(double initial_weight) : weight_(initial_weight) {}
   static std::unique_ptr<Box> makeGreenBox(double initial_weight);
@@ -59,12 +61,27 @@ class Box {
         return weight_;
         }
 
+  // update the weight of each box after absorbing
+  void update_box_weight(const double newBoxWeight) {
+      weight_ = newBoxWeight;
+      }
 
   // Pure Virtual Functions
   virtual double generateScore(const std::vector<double>& weights) = 0;
 
+  //track the weights absorbed by the boxes in each iteration
+  const std::vector<double> updateInputWeightTracker(const double inputWeight){
+              this->inputWeightTracker.push_back(inputWeight);
+              return this->inputWeightTracker;
+              }
+    
+
  protected:
   double weight_;
+
+ private:
+    std::vector<double> inputWeightTracker; 
+
 };
 
 // TODO
@@ -81,6 +98,7 @@ public:
         if(temp.size()<3){
             return std::accumulate(temp.begin(), temp.end(), 0.0) / temp.size();
         }else{
+          //compute the mean of the 3 recently absorbed weights
             return std::accumulate(temp.end()-3, temp.end(), 0.0) / 3;
         }
     }
@@ -90,8 +108,8 @@ public:
         auto mean =computeMean(weights);
         return mean*mean;
         }
-      
- 
+
+    
     };
 
 class BlueBox:public Box{
@@ -109,14 +127,15 @@ public:
              largest = weights[0];
            
         }else{
+          //find the smallest and the largest weight the box has absorbed so far
              smallest = *std::min_element(weights.begin(), weights.end());
              largest = *std::max_element(weights.begin(), weights.end());
         }
-        //compute the Cantor pairing and return the score
+        //compute the Cantor pairing i.e. pairing(0,1) = 2, and return the score
          return 0.5 * (smallest + largest) * (smallest + largest + 1) + largest;
             
     }
-    
+
     };
 
 std::unique_ptr<Box> Box::makeGreenBox(double initial_weight) {
@@ -127,18 +146,43 @@ std::unique_ptr<Box> Box::makeBlueBox(double initial_weight) {
     return std::make_unique<BlueBox>(initial_weight);
 }
 
-
+struct BoxCompare {
+    bool operator()(const std::unique_ptr<Box>& box1, const std::unique_ptr<Box>& box2) const {
+        return box1->get_weight() < box2->get_weight();
+    }
+};
 
 class Player {
  public:
-  void takeTurn(uint32_t input_weight,
-                const std::vector<std::unique_ptr<Box> >& boxes) {
-    // TODO
-  }
-  double getScore() const { return score_; }
 
+    void takeTurn(uint32_t input_weight, const std::vector<std::unique_ptr<Box> >& boxes) {
+     
+      // choose the box with minimum weight
+      auto& selectedBox = *std::min_element(boxes.begin(), boxes.end(), BoxCompare());
+      //add the input weight to the absorbed weight tracker; 
+      // the absorbed weights are used to generate scores for blue and green boxes
+      const std::vector<double> weights = selectedBox->updateInputWeightTracker(static_cast<double>(input_weight));
+
+      //use the generate score mechanism based on the box selected (Blue or Green) with the updated absorbed weights vector
+      double current_score = selectedBox->generateScore(weights);
+      scores.push_back(current_score);
+
+      //update the weight of the selected box; The box absorbs the input weight and add it to its own total weight
+      auto newTotalBoxWeight = selectedBox->get_weight() + static_cast<double>(input_weight);
+      selectedBox->update_box_weight(newTotalBoxWeight);
+
+      //add current score to obtain the final score
+      score_ += scores.back();
+
+  
+  }
+
+  double getScore() const { return score_; }
+  
  private:
   double score_{0.0};
+  std::vector<double> scores;
+  
 };
 
 std::pair<double, double> play(const std::vector<uint32_t>& input_weights) {
@@ -153,6 +197,7 @@ std::pair<double, double> play(const std::vector<uint32_t>& input_weights) {
 
   //PlayerA and PlayerB takes alternate turns. (Game starts with PlayerA)
   //Iterate over the input_weights
+   std::cout << "NEW GAME "<<std::endl;
    for(size_t i=0 ; i<input_weights.size() ;i++){
 
           if (i%2 == 0){
@@ -163,24 +208,26 @@ std::pair<double, double> play(const std::vector<uint32_t>& input_weights) {
 
   std::cout << "Scores: player A " << player_A.getScore() << ", player B " << player_B.getScore() << std::endl;
    }
+
+   
     return std::make_pair(player_A.getScore(), player_B.getScore());
   }
 
-/* 
+
 TEST_CASE("Final scores for first 4 Fibonacci numbers", "[fibonacci4]") {
   std::vector<uint32_t> inputs{1, 1, 2, 3};
   auto result = play(inputs);
   REQUIRE(result.first == 13.0);
   REQUIRE(result.second == 25.0);
-} */
+} 
 
-/* TEST_CASE("Final scores for first 8 Fibonacci numbers", "[fibonacci8]") {
+TEST_CASE("Final scores for first 8 Fibonacci numbers", "[fibonacci8]") {
   std::vector<uint32_t> inputs{1, 1, 2, 3, 5, 8, 13, 21};
   auto result = play(inputs);
   REQUIRE(result.first == 155.0);
   REQUIRE(result.second == 366.25);
 }
- */
+
 
 TEST_CASE("Test absorption of green box", "[green]") {
   // TODO
