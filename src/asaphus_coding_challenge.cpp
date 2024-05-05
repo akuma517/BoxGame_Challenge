@@ -100,10 +100,23 @@ public:
 
     //generates score for the blue box
     double generateScore(const std::vector<double>& weights) override{
-        return 0.0;
+        // identify the smallest and the largest absorbed weight
+        double smallest {0.0};
+        double largest {0.0};
+        //if only one element is absorbed by the box, the smallest and the largest element are the same
+        if(weights.size() ==1){
+             smallest = weights[0];
+             largest = weights[0];
+           
+        }else{
+             smallest = *std::min_element(weights.begin(), weights.end());
+             largest = *std::max_element(weights.begin(), weights.end());
+        }
+        //compute the Cantor pairing and return the score
+         return 0.5 * (smallest + largest) * (smallest + largest + 1) + largest;
             
     }
-      
+    
     };
 
 std::unique_ptr<Box> Box::makeGreenBox(double initial_weight) {
@@ -176,6 +189,9 @@ TEST_CASE("Test absorption of green box", "[green]") {
   REQUIRE(greenBox->generateScore({1,5}) == 9.00);
 }
 
-// TEST_CASE("Test absorption of blue box", "[blue]") {
-//   // TODO
-// }
+TEST_CASE("Test absorption of blue box", "[blue]") {
+  // TODO
+  auto bluebox = Box::makeBlueBox(0.2);
+  REQUIRE(bluebox->generateScore({2}) == 12);
+  REQUIRE(bluebox->generateScore({2,13}) == 133.0);
+}
