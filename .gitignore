@@ -27,7 +27,6 @@
 *.lib
 
 # Executables
-*.exe
 *.out
 *.app
 
@@ -46,6 +45,5 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
-bin/build/
-[Bb][Ii][Nn]
+build/
 [Bb][Uu][Ii][Ll][Dd]
