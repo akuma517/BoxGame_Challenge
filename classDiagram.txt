@@ -1,0 +1,51 @@
+@startuml
+class Box {
+  - inputWeightTracker_: vector<double>
+  # weight_: double
+  + Box(initial_weight: double)
+  + {static} makeGreenBox(initial_weight: double): unique_ptr<Box>
+  + {static} makeBlueBox(initial_weight: double): unique_ptr<Box>
+  + operator<(rhs: const Box&): bool
+  + getWeight(): double
+  + updateBoxWeight(new_box_weighteight: const double): void
+  + {abstract} generateScore(weights: const vector<double>&): double
+  + updateInputWeightTracker(input_weight: const double): const vector<double>
+}
+
+class BlueBox {
+  - inputWeightTracker_: vector<double>
+  # weight_: double
+  + BlueBox(initial_weight: double)
+  + {abstract} generateScore(weights: const vector<double>&): double
+}
+
+class GreenBox {
+  - inputWeightTracker_: vector<double>
+  # weight_: double
+  + GreenBox(initial_weight: double)
+  + {abstract} generateScore(weights: const vector<double>&): double
+  - computeMean(temp: const vector<double>&): double
+}
+
+Box <|-- GreenBox
+
+Box <|-- BlueBox
+
+
+class Player {
+  - score_: double
+  - scores_: vector<double>
+  + takeTurn(input_weight: uint32_t, boxes: const vector<unique_ptr<Box>>&): void
+  + getScore(): double
+}
+
+class PlayGame {
+  + play(input_weights:const std::vector<uint32_t>&): std::pair<double, double>
+}
+
+GreenBox o-- Player
+BlueBox o-- Player
+PlayGame --> Player
+
+
+@enduml
