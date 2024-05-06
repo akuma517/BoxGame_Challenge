@@ -34,7 +34,7 @@ Before compiling and running the project, please ensure that you have installed 
 
 After succesfully compiling the project, you can run the executable file as follows.
 
-1. Navigate to the folder where executable is present. (The executable file can be found in the challenge folder):
+1. Navigate to the folder where executable is present. (The executable file can be found in the './challenge' folder):
 
     ````bash
         cd challenge
