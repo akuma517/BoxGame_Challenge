@@ -1,16 +1,17 @@
 cmake_minimum_required(VERSION 3.25.0)
-
 project(asaphus_challenge VERSION 0.1.0 LANGUAGES CXX)
 
 # Set the directory where the bin will be built.
-set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/challenge)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
+# Include directories
+include_directories(includes)
 
-set( PROJECT_HEADERS ${PROJECT_SOURCE_DIR}/src/includes/catch.hpp )
-set( PROJECT_SRCS ${PROJECT_SOURCE_DIR}/src/asaphus_coding_challenge.cpp )
+file(GLOB HEADER_FILES "includes/*.h" "includes/*.hpp" )
+file(GLOB SOURCE_FILES "src/*.cpp")
 
-# Link the sources with the final binary named "challenge"
-add_executable(challenge ${PROJECT_SRCS} ${PROJECT_HEADERS} )
+# Add executable
+add_executable(AsaphusChallenge ${SOURCE_FILES} ${HEADER_FILES} )
 
 
