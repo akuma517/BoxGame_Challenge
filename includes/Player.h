@@ -9,7 +9,7 @@
 class Player{
     private:
         double score_{0.0};
-        std::vector<double> scores;
+        std::vector<double> scores_;
 
     public:
         void takeTurn(uint32_t input_weight, const std::vector<std::unique_ptr<Box> >& boxes);

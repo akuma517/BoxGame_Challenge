@@ -17,19 +17,19 @@ bool Box::operator<(const Box& rhs) const {
     }
 
 
-double Box::get_weight() const{
+double Box::getWeight() const{
         return weight_;
         }
 
 // update the weight of each box after absorbing
-void Box::update_box_weight(const double newBoxWeight) {
-      weight_ = newBoxWeight;
+void Box::updateBoxWeight(const double new_box_weight) {
+      weight_ = new_box_weight;
     }
 
 
 //track the weights absorbed by the boxes in each iteration
-const std::vector<double> Box::updateInputWeightTracker(const double inputWeight){
-              inputWeightTracker.push_back(inputWeight);
-              return inputWeightTracker;
+const std::vector<double> Box::updateInputWeightTracker(const double input_weight){
+              inputWeightTracker_.push_back(input_weight);
+              return inputWeightTracker_;
     }
 

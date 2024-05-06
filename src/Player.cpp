@@ -4,28 +4,28 @@
 
 struct BoxCompare {
     bool operator()(const std::unique_ptr<Box>& box1, const std::unique_ptr<Box>& box2) const {
-        return box1->get_weight() < box2->get_weight();
+        return box1->getWeight() < box2->getWeight();
     }
 };
 
 void Player::takeTurn(uint32_t input_weight, const std::vector<std::unique_ptr<Box> >& boxes) {
      
       // choose the box with minimum weight
-      auto& selectedBox = *std::min_element(boxes.begin(), boxes.end(), BoxCompare());
+      auto& selected_box = *std::min_element(boxes.begin(), boxes.end(), BoxCompare());
       //add the input weight to the absorbed weight tracker; 
       // the absorbed weights are used to generate scores for blue and green boxes
-      const std::vector<double> weights = selectedBox->updateInputWeightTracker(static_cast<double>(input_weight));
+      const std::vector<double> weights = selected_box->updateInputWeightTracker(static_cast<double>(input_weight));
 
       //use the generate score mechanism based on the box selected (Blue or Green) with the updated absorbed weights vector
-      double current_score = selectedBox->generateScore(weights);
-      scores.push_back(current_score);
+      double current_score = selected_box->generateScore(weights);
+      scores_.push_back(current_score);
 
       //update the weight of the selected box; The box absorbs the input weight and add it to its own total weight
-      auto newTotalBoxWeight = selectedBox->get_weight() + static_cast<double>(input_weight);
-      selectedBox->update_box_weight(newTotalBoxWeight);
+      auto new_total_box_weight = selected_box->getWeight() + static_cast<double>(input_weight);
+      selected_box->updateBoxWeight(new_total_box_weight);
 
       //add current score to obtain the final score
-      score_ += scores.back();
+      score_ += scores_.back();
 
   }
 
