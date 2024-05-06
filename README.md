@@ -59,6 +59,6 @@ Using CMake extension on Visual Studio code makes it easier to compile and run t
 
 # UML Class Diagram
 
-![Alt text](asaphus_challenge/classDiagram.png)
+![Alt text](./classDiagram.png)
 
 
