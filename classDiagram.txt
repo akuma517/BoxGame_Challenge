@@ -39,13 +39,7 @@ class Player {
   + getScore(): double
 }
 
-class PlayGame {
-  + play(input_weights:const std::vector<uint32_t>&): std::pair<double, double>
-}
 
 GreenBox o-- Player
 BlueBox o-- Player
-PlayGame --> Player
-
-
 @enduml
