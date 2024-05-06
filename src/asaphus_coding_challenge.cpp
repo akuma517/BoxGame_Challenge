@@ -49,6 +49,11 @@
 #include "includes/catch.hpp"
 
 class Box {
+ private:
+    std::vector<double> inputWeightTracker; 
+
+ protected:
+  double weight_;
 
  public:
   explicit Box(double initial_weight) : weight_(initial_weight) {}
@@ -74,14 +79,8 @@ class Box {
               this->inputWeightTracker.push_back(inputWeight);
               return this->inputWeightTracker;
               }
+
     
-
- protected:
-  double weight_;
-
- private:
-    std::vector<double> inputWeightTracker; 
-
 };
 
 // TODO
@@ -153,6 +152,10 @@ struct BoxCompare {
 };
 
 class Player {
+  private:
+  double score_{0.0};
+  std::vector<double> scores;
+
  public:
 
     void takeTurn(uint32_t input_weight, const std::vector<std::unique_ptr<Box> >& boxes) {
@@ -178,10 +181,6 @@ class Player {
   }
 
   double getScore() const { return score_; }
-  
- private:
-  double score_{0.0};
-  std::vector<double> scores;
   
 };
 
@@ -209,7 +208,6 @@ std::pair<double, double> play(const std::vector<uint32_t>& input_weights) {
   std::cout << "Scores: player A " << player_A.getScore() << ", player B " << player_B.getScore() << std::endl;
    }
 
-   
     return std::make_pair(player_A.getScore(), player_B.getScore());
   }
 
@@ -228,17 +226,49 @@ TEST_CASE("Final scores for first 8 Fibonacci numbers", "[fibonacci8]") {
   REQUIRE(result.second == 366.25);
 }
 
-
 TEST_CASE("Test absorption of green box", "[green]") {
   // TODO
-  auto greenBox = Box::makeGreenBox(0.0);
-  REQUIRE(greenBox->generateScore({1}) == 1.00);
+  //Test:: When no weights have been absorbed by the box
+  auto greenBox = Box::makeGreenBox(0.1);
+  const std::vector<double> weights = greenBox->Box::updateInputWeightTracker(static_cast<double>(1.0));
+  REQUIRE(greenBox->generateScore(weights) == 1.00);
+
+  auto updatedBoxWeight = greenBox->get_weight() + static_cast<double>(1.0);
+  greenBox->update_box_weight(updatedBoxWeight);
+  REQUIRE(greenBox->get_weight() == 1.10);
+
+  //Test:: A weight has been absorbed by the box
+  const std::vector<double> weights_2 = greenBox->Box::updateInputWeightTracker(static_cast<double>(8.0));
+  REQUIRE(greenBox->generateScore(weights_2) == 20.25);
+
+  auto updatedBoxWeight_2 = greenBox->get_weight() + static_cast<double>(8.0);
+  greenBox->update_box_weight(updatedBoxWeight_2);
+  REQUIRE(greenBox->get_weight() == 9.10);
+
+
   REQUIRE(greenBox->generateScore({1,5}) == 9.00);
-}
+
+  }
 
 TEST_CASE("Test absorption of blue box", "[blue]") {
   // TODO
   auto bluebox = Box::makeBlueBox(0.2);
+  //Test:: When no weights have been absorbed by the box
+  const std::vector<double> weights = bluebox->Box::updateInputWeightTracker(static_cast<double>(2.0));
+  REQUIRE(bluebox->generateScore(weights) == 12.00);
+
+  auto updatedBoxWeight = bluebox->get_weight() + static_cast<double>(2.0);
+  bluebox->update_box_weight(updatedBoxWeight);
+  REQUIRE(bluebox->get_weight() == 2.2);
+
+  //Test:: A weight has been absorbed by the box
+  const std::vector<double> weights_2 = bluebox->Box::updateInputWeightTracker(static_cast<double>(13.0));
+  REQUIRE(bluebox->generateScore(weights_2) == 133.00);
+
+  auto updatedBoxWeight_2 = bluebox->get_weight() + static_cast<double>(13.0);
+  bluebox->update_box_weight(updatedBoxWeight_2);
+  REQUIRE(bluebox->get_weight() == 15.2);
+
   REQUIRE(bluebox->generateScore({2}) == 12);
   REQUIRE(bluebox->generateScore({2,13}) == 133.0);
 }

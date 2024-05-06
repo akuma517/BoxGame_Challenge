@@ -14,8 +14,3 @@ set( PROJECT_SRCS ${PROJECT_SOURCE_DIR}/src/asaphus_coding_challenge.cpp )
 add_executable(challenge ${PROJECT_SRCS} ${PROJECT_HEADERS} )
 
 
-
-# set(CMAKE_CXX_STANDARD 23)
-# set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# add_executable(${PROJECT_NAME} asaphus_coding_challenge.cpp catch.hpp)

@@ -1,4 +1,5 @@
 {
     "cmake.configureOnOpen": true,
-    "cmake.sourceDirectory": "C:/Users/ayush/MyWorkSpace/asaphusChallenge/asaphus_challenge"
+    "cmake.sourceDirectory": "C:/Users/ayush/MyWorkSpace/asaphusChallenge/asaphus_challenge",
+    "code-runner.showRunIconInEditorTitleMenu" : true
 }
