@@ -7,19 +7,46 @@ Author - Ayush Kumar
 Before compiling and running the project, please ensure that you have installed the following:
 
 - CMake (version >=3.25.0)
-- C++ Complier (e.g. GCC, Clang, etc.)
+- MinGW-w64 Toolchain or other C++ Compiler (eg., GCC, Clang, etc)
 
 # How to build the project
 
 1. Create a build directory.
-2. Run CMake to generate the build files.
-3. Compile the project.
+
+    ````bash
+        mkdir build
+        cd build
+    ````
+2. Run CMake to generate the build files using MinGW
+
+    ````bash
+        cmake -S /path/to/source/with/CMakeLists.txt -G "MinGW Makefiles"
+        example: cmake -S ..\asaphus_challenge -G "MinGW Makefiles"
+    ````
+3. Compile and build the project.
+
+    ````bash
+        cmake --build /path/to/build/files
+        example: cmake --build ../build
+    ````
 
 # Run Instructions
 
-The executable file can be found in the challenge folder.
-- /asaphus_challenge/challenge/AsaphusChallenge.exe
+After succesfully compiling the project, you can run the executable file as follows.
 
+1. Navigate to the folder where executable is present. (The executable file can be found in the challenge folder):
+
+    ````bash
+        cd challenge
+    ````
+2. Run the executable:
+
+    ````bash
+        .\AsaphusChallenge.exe
+    ````
+# Additional Notes
+
+Using CMake extension on Visual Studio code makes it easier to compile and run the User Interface.
 
 # Architectural Notes 
 
@@ -30,6 +57,8 @@ The executable file can be found in the challenge folder.
 - Each box maintains a vector which stores the weights it has observed before, providing flexibility to generate scores using previous weights if the generate score requirement changes.
 - The player scores are also stored for each turn, which can tell the progress of the game at each stage.
 
-# Additional Notes
+# UML Class Diagram
 
-Using CMake extension on Visual Studio code makes it easier to compile and run the User Interface.
+![Alt text](asaphusChallenge\asaphus_challenge\classDiagram.png)
+
+
